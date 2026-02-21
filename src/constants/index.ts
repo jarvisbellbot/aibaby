@@ -51,22 +51,22 @@ export const HAPPINESS_WEIGHTS = {
   fun: 0.4,
 };
 
-// Generation progress messages
+// Generation progress messages — emotional copy that primes attachment during the wait
 export const GENERATION_MESSAGES: Record<string, string> = {
-  uploading: 'Uploading your photos...',
-  analyzing: 'Analyzing those good genes... 🧬',
-  mixing: 'Mixing DNA with a sprinkle of magic... ✨',
-  generating: 'Adding extra cuteness... 🥰',
-  finishing: 'Almost there... just adding the finishing touches! 💕',
-  complete: 'Your baby is ready! 🎉',
+  uploading: 'Uploading your photos... 📸',
+  analyzing: 'Combining the best of both of you... 👨‍👩‍👧',
+  mixing: 'Sprinkling in a little magic ✨',
+  generating: 'Adding those perfect little fingers... 🤞',
+  finishing: 'Almost ready to meet the world... 👶',
+  complete: 'Your baby is here! 🎉',
 };
 
-// Onboarding copy
+// Onboarding copy — emotionally resonant, designed to create attachment at every step
 export const ONBOARDING_COPY = {
   welcome: {
-    title: 'Every love story\ndeserves a chapter',
-    subtitle: 'See what your future baby could look like — and raise them together.',
-    cta: 'Get Started',
+    title: 'See your baby\nbefore they\'re born',
+    subtitle: 'AI-powered. Surprisingly real.',
+    cta: 'Create My Baby',
   },
   modeSelect: {
     title: 'How would you like\nto start?',
@@ -95,13 +95,13 @@ export const ONBOARDING_COPY = {
     title: "Creating something\nmagical...",
   },
   reveal: {
-    title: 'Say hello! 👋',
+    title: 'Meet your baby ✨',
     subtitle: 'Your baby is here',
   },
   naming: {
-    title: "What should we\ncall this cutie?",
-    subtitle: 'Pick a name for your baby',
-    suggestions: ['Luna', 'Leo', 'Mia', 'Noah', 'Aria', 'Kai', 'Zoe', 'Liam', 'Ember', 'Sage'],
+    title: "What will you\ncall them?",
+    subtitle: 'Every baby deserves a perfect name',
+    suggestions: ['Luna', 'Sage', 'River', 'Nova', 'Kai', 'Eden', 'Aria', 'Finn', 'Ember', 'Willow'],
   },
   tutorial: {
     steps: [
