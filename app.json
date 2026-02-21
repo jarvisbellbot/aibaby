@@ -38,7 +38,6 @@
           "photosPermission": "Allow Ember to access your photos to create your AI baby."
         }
       ],
-      "@stripe/stripe-react-native"
     ],
     "extra": {
       "supabaseUrl": "",
