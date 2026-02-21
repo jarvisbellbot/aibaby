@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
 
 interface InputProps {
   value: string;
@@ -26,47 +24,47 @@ export const Input: React.FC<InputProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={[styles.container, style]}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <View style={[styles.inputWrapper, focused && styles.focused, error && styles.errored]}>
+    <View style={[inp.container, style]}>
+      {label && <Text style={inp.label}>{label}</Text>}
+      <View style={[inp.inputWrapper, focused && inp.focused, !!error && inp.errored]}>
         <TextInput
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={colors.text.muted}
+          placeholderTextColor={colors.textMuted}
           secureTextEntry={secureTextEntry && !showPassword}
           autoCapitalize={autoCapitalize}
           keyboardType={keyboardType}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          style={styles.input}
+          style={inp.input}
           multiline={multiline}
           maxLength={maxLength}
         />
         {secureTextEntry && (
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
-            <Text style={styles.eyeText}>{showPassword ? '🙈' : '👁'}</Text>
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={inp.eyeBtn}>
+            <Text style={inp.eyeText}>{showPassword ? '🙈' : '👁'}</Text>
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={inp.error}>{error}</Text>}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: { marginBottom: spacing.md },
-  label: { ...typography.body.sm, color: colors.text.secondary, fontWeight: '600', marginBottom: spacing.xs },
+const inp = StyleSheet.create({
+  container: { marginBottom: 16 },
+  label: { fontSize: 13, color: colors.textSecondary, fontWeight: '600', marginBottom: 6 },
   inputWrapper: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: colors.background.warmWhite,
-    borderRadius: 14, borderWidth: 1.5, borderColor: colors.border.light,
-    paddingHorizontal: spacing.md,
+    backgroundColor: colors.background,
+    borderRadius: 14, borderWidth: 1.5, borderColor: colors.borderLight,
+    paddingHorizontal: 16,
   },
-  focused: { borderColor: colors.border.focus, backgroundColor: '#fff' },
-  errored: { borderColor: colors.semantic.error },
-  input: { flex: 1, paddingVertical: spacing.sm + 2, ...typography.body.md, color: colors.text.primary },
-  eyeBtn: { padding: spacing.xs },
+  focused: { borderColor: colors.borderFocus, backgroundColor: colors.surface },
+  errored: { borderColor: colors.error },
+  input: { flex: 1, paddingVertical: 14, fontSize: 16, color: colors.text },
+  eyeBtn: { padding: 8 },
   eyeText: { fontSize: 16 },
-  error: { ...typography.body.xs, color: colors.semantic.error, marginTop: 4 },
+  error: { fontSize: 12, color: colors.error, marginTop: 4 },
 });

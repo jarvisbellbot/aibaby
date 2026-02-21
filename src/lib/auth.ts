@@ -49,8 +49,8 @@ export async function signInWithPassword(
       await upsertUserProfile({
         id: data.user.id,
         email: data.user.email!,
-        display_name: data.user.user_metadata?.full_name || null,
-        avatar_url: data.user.user_metadata?.avatar_url || null,
+        display_name: data.user.user_metadata?.full_name || undefined,
+        avatar_url: data.user.user_metadata?.avatar_url || undefined,
       });
     }
 
@@ -83,7 +83,7 @@ export async function signUpWithEmail(
       await upsertUserProfile({
         id: data.user.id,
         email: data.user.email!,
-        display_name: displayName || null,
+        display_name: displayName || undefined,
       });
     }
 

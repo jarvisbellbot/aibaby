@@ -3,21 +3,23 @@ import { TouchableOpacity, Text, StyleSheet, Animated, View } from 'react-native
 import { colors } from '../../theme/colors';
 
 interface ActionButtonProps {
-  action: 'feed' | 'diaper' | 'play';
+  type?: 'feed' | 'diaper' | 'play';
+  action?: 'feed' | 'diaper' | 'play';
   onPress: () => void;
   disabled?: boolean;
   cooldownRemaining?: number;
 }
 
 const ACTION_CONFIG = {
-  feed: { emoji: '🍼', label: 'Feed', color: colors.action.feed, bg: '#FFF0E8' },
-  diaper: { emoji: '🧷', label: 'Diaper', color: colors.action.diaper, bg: '#E8F8F5' },
-  play: { emoji: '🎮', label: 'Play', color: colors.action.play, bg: '#F0F0FF' },
+  feed: { emoji: '🍼', label: 'Feed', color: colors.actionFeed, bg: '#FFF0E8' },
+  diaper: { emoji: '🧷', label: 'Diaper', color: colors.actionDiaper, bg: '#E8F8F5' },
+  play: { emoji: '🎮', label: 'Play', color: '#9090C8', bg: '#F0F0FF' },
 };
 
-export const ActionButton: React.FC<ActionButtonProps> = ({ action, onPress, disabled, cooldownRemaining }) => {
+export const ActionButton: React.FC<ActionButtonProps> = ({ type, action, onPress, disabled, cooldownRemaining }) => {
+  const key = type || action || 'feed';
   const scale = useRef(new Animated.Value(1)).current;
-  const config = ACTION_CONFIG[action];
+  const config = ACTION_CONFIG[key];
 
   const handlePress = () => {
     Animated.sequence([
@@ -44,9 +46,14 @@ export const ActionButton: React.FC<ActionButtonProps> = ({ action, onPress, dis
 };
 
 const styles = StyleSheet.create({
-  btn: { alignItems: 'center', justifyContent: 'center', width: 90, height: 90, borderRadius: 24, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
+  btn: {
+    alignItems: 'center', justifyContent: 'center',
+    width: 90, height: 90, borderRadius: 24,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08, shadowRadius: 8, elevation: 3,
+  },
   emoji: { fontSize: 28, marginBottom: 4 },
   label: { fontSize: 12, fontWeight: '700' },
-  cooldown: { fontSize: 10, color: colors.text.muted, marginTop: 2 },
+  cooldown: { fontSize: 10, color: colors.textMuted, marginTop: 2 },
   disabled: { opacity: 0.5 },
 });

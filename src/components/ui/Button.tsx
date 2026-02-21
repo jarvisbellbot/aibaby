@@ -9,17 +9,16 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
 
 interface ButtonProps {
   label: string;
   onPress: () => void;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  style?: 'primary' | 'secondary' | 'ghost' | 'danger'; // alias for variant
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   disabled?: boolean;
-  style?: ViewStyle;
+  containerStyle?: ViewStyle;
   textStyle?: TextStyle;
   fullWidth?: boolean;
 }
@@ -27,44 +26,41 @@ interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({
   label,
   onPress,
-  variant = 'primary',
+  variant,
+  style,
   size = 'md',
   loading = false,
   disabled = false,
-  style,
+  containerStyle,
   textStyle,
   fullWidth = false,
 }) => {
+  const resolvedVariant = variant || style || 'primary';
+
   const sizeStyles = {
-    sm: { paddingVertical: spacing.xs, paddingHorizontal: spacing.md, borderRadius: 12 },
-    md: { paddingVertical: spacing.sm + 2, paddingHorizontal: spacing.lg, borderRadius: 16 },
-    lg: { paddingVertical: spacing.md, paddingHorizontal: spacing.xl, borderRadius: 20 },
+    sm: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 12 },
+    md: { paddingVertical: 14, paddingHorizontal: 24, borderRadius: 16 },
+    lg: { paddingVertical: 18, paddingHorizontal: 32, borderRadius: 20 },
   };
 
-  const textSizes = {
-    sm: typography.body.sm,
-    md: typography.body.md,
-    lg: typography.body.lg,
-  };
-
-  if (variant === 'primary') {
+  if (resolvedVariant === 'primary') {
     return (
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled || loading}
         activeOpacity={0.85}
-        style={[fullWidth && styles.fullWidth, style]}
+        style={[fullWidth && btn.fullWidth, containerStyle, { marginBottom: 12 }]}
       >
         <LinearGradient
           colors={disabled ? ['#D0D0D0', '#C0C0C0'] : ['#FF6B6B', '#FFA07A']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={[styles.base, sizeStyles[size]]}
+          style={[btn.base, sizeStyles[size]]}
         >
           {loading ? (
             <ActivityIndicator color="#fff" size="small" />
           ) : (
-            <Text style={[styles.primaryText, textSizes[size], textStyle]}>{label}</Text>
+            <Text style={[btn.primaryText, textStyle]}>{label}</Text>
           )}
         </LinearGradient>
       </TouchableOpacity>
@@ -77,24 +73,24 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       activeOpacity={0.85}
       style={[
-        styles.base,
+        btn.base,
         sizeStyles[size],
-        variant === 'secondary' && styles.secondary,
-        variant === 'ghost' && styles.ghost,
-        variant === 'danger' && styles.danger,
-        disabled && styles.disabled,
-        fullWidth && styles.fullWidth,
-        style,
+        resolvedVariant === 'secondary' && btn.secondary,
+        resolvedVariant === 'ghost' && btn.ghost,
+        resolvedVariant === 'danger' && btn.danger,
+        disabled && btn.disabled,
+        fullWidth && btn.fullWidth,
+        containerStyle,
+        { marginBottom: 12 },
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'secondary' ? colors.primary.coral : '#fff'} size="small" />
+        <ActivityIndicator color={resolvedVariant === 'secondary' ? colors.primary : '#fff'} size="small" />
       ) : (
         <Text
           style={[
-            variant === 'secondary' ? styles.secondaryText : styles.primaryText,
-            variant === 'ghost' && styles.ghostText,
-            textSizes[size],
+            resolvedVariant === 'secondary' ? btn.secondaryText : btn.primaryText,
+            resolvedVariant === 'ghost' && btn.ghostText,
             textStyle,
           ]}
         >
@@ -105,46 +101,41 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const btn = StyleSheet.create({
   base: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.shadow.warm,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 4,
   },
   fullWidth: { width: '100%' },
   secondary: {
-    backgroundColor: colors.background.white,
+    backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: colors.primary.coral,
+    borderColor: colors.primary,
   },
   ghost: {
     backgroundColor: 'transparent',
-    shadowOpacity: 0,
-    elevation: 0,
   },
   danger: {
     backgroundColor: '#FF4444',
   },
   disabled: {
     opacity: 0.5,
-    shadowOpacity: 0,
   },
   primaryText: {
-    color: colors.text.light,
+    color: colors.textLight,
     fontWeight: '700',
+    fontSize: 16,
     letterSpacing: 0.3,
   },
   secondaryText: {
-    color: colors.primary.coral,
+    color: colors.primary,
     fontWeight: '700',
+    fontSize: 16,
     letterSpacing: 0.3,
   },
   ghostText: {
-    color: colors.text.secondary,
+    color: colors.textSecondary,
     fontWeight: '600',
+    fontSize: 16,
   },
 });

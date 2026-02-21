@@ -1,15 +1,20 @@
 /**
  * Naming Screen — Ember
- * Name your baby
+ * Name your baby. Shows generated image.
  */
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity, Image,
+  KeyboardAvoidingView, Platform, ScrollView, SafeAreaView,
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types';
 import { Button, Input } from '../../components/ui';
 import { ONBOARDING_COPY } from '../../constants';
 import { colors } from '../../theme/colors';
+import { DEMO_MODE } from '../../lib/supabase';
+import { DEMO_BABY_DATA } from '../../context/BabyContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Naming'>;
 
@@ -20,50 +25,154 @@ export default function NamingScreen({ navigation, route }: Props) {
 
   function handleNext() {
     if (!name.trim()) return;
+    // In demo mode, we don't save to Supabase — just navigate
     navigation.navigate('Tutorial', { babyName: name.trim(), babyImageUrl });
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{copy.title}</Text>
-      <Text style={styles.subtitle}>{copy.subtitle}</Text>
+    <SafeAreaView style={styles.safe}>
+      <KeyboardAvoidingView
+        style={styles.kav}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          {/* Baby preview */}
+          <View style={styles.imageWrap}>
+            <Image
+              source={{ uri: babyImageUrl }}
+              style={styles.babyImage}
+              resizeMode="cover"
+            />
+            <View style={styles.imageBadge}>
+              <Text style={styles.imageBadgeText}>Your baby! 🎉</Text>
+            </View>
+          </View>
 
-      <Input
-        value={name}
-        onChangeText={setName}
-        placeholder="Enter a name..."
-        autoFocus
-        maxLength={20}
-      />
+          <Text style={styles.title}>{copy.title}</Text>
+          <Text style={styles.subtitle}>{copy.subtitle}</Text>
 
-      <Text style={styles.suggestionsLabel}>Quick picks:</Text>
-      <View style={styles.suggestions}>
-        {copy.suggestions.map(suggestion => (
-          <TouchableOpacity
-            key={suggestion}
-            style={styles.chip}
-            onPress={() => setName(suggestion)}
-          >
-            <Text style={styles.chipText}>{suggestion}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+          <Input
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter a name..."
+            autoCapitalize="words"
+            maxLength={20}
+          />
 
-      <Button
-        label="That's the one! 🎉"
-        onPress={handleNext}
-        disabled={!name.trim()}
-      />
-    </View>
+          <Text style={styles.suggestionsLabel}>✨ Quick picks:</Text>
+          <View style={styles.suggestions}>
+            {copy.suggestions.map(suggestion => (
+              <TouchableOpacity
+                key={suggestion}
+                style={[styles.chip, name === suggestion && styles.chipSelected]}
+                onPress={() => setName(suggestion)}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.chipText, name === suggestion && styles.chipTextSelected]}>
+                  {suggestion}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <Button
+            label="That's the one! 🎉"
+            onPress={handleNext}
+            disabled={!name.trim()}
+            size="lg"
+            fullWidth
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 32, justifyContent: 'center', backgroundColor: colors.background },
-  title: { fontSize: 28, fontWeight: '800', textAlign: 'center', marginBottom: 8 },
-  subtitle: { fontSize: 16, color: colors.textSecondary, textAlign: 'center', marginBottom: 32 },
-  suggestionsLabel: { fontSize: 14, color: colors.textSecondary, marginBottom: 12, marginTop: 8 },
-  suggestions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 40 },
-  chip: { backgroundColor: colors.surface, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
-  chipText: { fontSize: 14, fontWeight: '600' },
+  safe: { flex: 1, backgroundColor: colors.background },
+  kav: { flex: 1 },
+  container: {
+    alignItems: 'center',
+    padding: 28,
+    paddingTop: 32,
+  },
+  imageWrap: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    overflow: 'hidden',
+    marginBottom: 28,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 8,
+    position: 'relative',
+  },
+  babyImage: {
+    width: '100%',
+    height: '100%',
+  },
+  imageBadge: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingVertical: 6,
+    alignItems: 'center',
+  },
+  imageBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '900',
+    textAlign: 'center',
+    color: colors.text,
+    lineHeight: 36,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  suggestionsLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginBottom: 12,
+    alignSelf: 'flex-start',
+  },
+  suggestions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 32,
+    alignSelf: 'flex-start',
+  },
+  chip: {
+    backgroundColor: colors.surface,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: colors.borderLight,
+  },
+  chipSelected: {
+    backgroundColor: colors.primary + '22',
+    borderColor: colors.primary,
+  },
+  chipText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  chipTextSelected: {
+    color: colors.primary,
+  },
 });

@@ -217,3 +217,8 @@ async function generateDemoImage(
 function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+/**
+ * Alias for backwards compatibility
+ */
+export const generateBaby = generateBabyImage;

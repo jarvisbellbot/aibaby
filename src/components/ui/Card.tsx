@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { colors } from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
 
 interface CardProps {
   children: React.ReactNode;
@@ -16,20 +15,15 @@ export const Card: React.FC<CardProps> = ({
   variant = 'default',
   padding = 'md',
 }) => {
-  const paddings = {
-    none: 0,
-    sm: spacing.sm,
-    md: spacing.md,
-    lg: spacing.lg,
-  };
+  const paddings = { none: 0, sm: 8, md: 16, lg: 24 };
 
   return (
     <View
       style={[
-        styles.base,
+        card.base,
         { padding: paddings[padding] },
-        variant === 'soft' && styles.soft,
-        variant === 'bordered' && styles.bordered,
+        variant === 'soft' && card.soft,
+        variant === 'bordered' && card.bordered,
         style,
       ]}
     >
@@ -38,23 +32,23 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const card = StyleSheet.create({
   base: {
-    backgroundColor: colors.background.card,
+    backgroundColor: colors.card,
     borderRadius: 20,
-    shadowColor: colors.shadow.medium,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
+    shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 3,
   },
   soft: {
-    backgroundColor: colors.background.warmWhite,
-    shadowOpacity: 0.5,
+    backgroundColor: colors.background,
+    shadowOpacity: 0.04,
   },
   bordered: {
     borderWidth: 1.5,
-    borderColor: colors.border.light,
+    borderColor: colors.borderLight,
     shadowOpacity: 0,
     elevation: 0,
   },
