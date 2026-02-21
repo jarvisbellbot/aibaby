@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Animated, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { colors } from '../../theme/colors';
 
 interface ActionButtonProps {
@@ -22,6 +23,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({ type, action, onPres
   const config = ACTION_CONFIG[key];
 
   const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Animated.sequence([
       Animated.spring(scale, { toValue: 0.9, useNativeDriver: true, tension: 300 }),
       Animated.spring(scale, { toValue: 1, useNativeDriver: true, tension: 300 }),

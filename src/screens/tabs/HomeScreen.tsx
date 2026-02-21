@@ -3,9 +3,9 @@
  * Main baby care screen — wired to BabyContext
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  View, Text, StyleSheet, RefreshControl, ScrollView, SafeAreaView,
+  View, Text, StyleSheet, RefreshControl, ScrollView, SafeAreaView, Animated,
 } from 'react-native';
 import { useBaby } from '../../context/BabyContext';
 import { BabyAvatar } from '../../components/baby/BabyAvatar';
@@ -15,9 +15,58 @@ import { LoadingOverlay } from '../../components/shared/LoadingOverlay';
 import { colors } from '../../theme/colors';
 
 export default function HomeScreen() {
-  const { currentBaby, currentStats, loading, performAction, refreshBaby } = useBaby();
+  const { currentBaby, currentStats, loading, performAction, refreshBaby, setBaby } = useBaby();
   const [refreshing, setRefreshing] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
+
+  // ── Reaction animation ───────────────────────────────────────────────────
+  const reactionAnim = useRef(new Animated.Value(0)).current;
+  const reactionOpacity = useRef(new Animated.Value(0)).current;
+  const [reactionEmoji, setReactionEmoji] = useState('💕');
+
+  // ── Passive stats decay ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (!currentBaby) return;
+    const interval = setInterval(() => {
+      setBaby({
+        ...currentBaby,
+        hunger: Math.max(0, (currentBaby.hunger ?? 80) - 3),
+        fun: Math.max(0, (currentBaby.fun ?? 65) - 2),
+        cleanliness: Math.max(0, (currentBaby.cleanliness ?? 70) - 1),
+      });
+    }, 60000); // every 60 seconds
+    return () => clearInterval(interval);
+  }, [currentBaby]);
+
+  const triggerReaction = (type: 'feed' | 'diaper' | 'play') => {
+    const emojiMap = { feed: '🍼', diaper: '✨', play: '🎮' };
+    setReactionEmoji(emojiMap[type]);
+    reactionAnim.setValue(0);
+    reactionOpacity.setValue(0);
+
+    Animated.parallel([
+      Animated.sequence([
+        Animated.timing(reactionOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.delay(800),
+        Animated.timing(reactionOpacity, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.timing(reactionAnim, {
+        toValue: -60,
+        duration: 1100,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      reactionAnim.setValue(0);
+    });
+  };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -29,6 +78,7 @@ export default function HomeScreen() {
     setActionLoading(true);
     await performAction(type);
     setActionLoading(false);
+    triggerReaction(type);
   }
 
   if (loading) {
@@ -70,14 +120,28 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Baby Avatar */}
-        <BabyAvatar
-          imageUrl={currentBaby.image_url}
-          mood={currentStats.mood}
-          happiness={currentStats.happiness}
-          size={200}
-          name={undefined}
-        />
+        {/* Baby Avatar + reaction overlay */}
+        <View style={styles.avatarWrapper}>
+          <BabyAvatar
+            imageUrl={currentBaby.image_url}
+            mood={currentStats.mood}
+            happiness={currentStats.happiness}
+            size={200}
+            name={undefined}
+          />
+          {/* Floating reaction emoji */}
+          <Animated.Text
+            style={[
+              styles.reactionEmoji,
+              {
+                opacity: reactionOpacity,
+                transform: [{ translateY: reactionAnim }],
+              },
+            ]}
+          >
+            {reactionEmoji}
+          </Animated.Text>
+        </View>
 
         {/* Happiness Meter */}
         <View style={styles.meterWrap}>
@@ -170,6 +234,18 @@ const styles = StyleSheet.create({
   header: { width: '100%', paddingTop: 20, marginBottom: 24 },
   greeting: { fontSize: 14, color: colors.textSecondary, fontWeight: '600', marginBottom: 4 },
   name: { fontSize: 32, fontWeight: '900', color: colors.text },
+  avatarWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  reactionEmoji: {
+    position: 'absolute',
+    top: -10,
+    fontSize: 36,
+    zIndex: 10,
+    pointerEvents: 'none',
+  } as any,
   meterWrap: { width: '100%', marginTop: 28, marginBottom: 16 },
   statsRow: { flexDirection: 'row', gap: 10, width: '100%', marginBottom: 28 },
   actionsLabel: { width: '100%', marginBottom: 16 },

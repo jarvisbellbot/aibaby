@@ -255,7 +255,7 @@ async function generateDemoImage(
   }
 
   // Warm, sweet baby stock photo for demo
-  return 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=512&h=728&fit=crop&crop=face';
+  return 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=512&h=728&fit=crop&crop=face';
 }
 
 /**

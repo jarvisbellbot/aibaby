@@ -59,7 +59,7 @@ export default function BabyRevealScreen({ navigation, route }: Props) {
 
   // ── Phase tracking ────────────────────────────────────────────────────────
   const [phase, setPhase] = useState<
-    'dark' | 'anticipation' | 'revealing' | 'revealed' | 'celebratingl'
+    'dark' | 'anticipation' | 'revealing' | 'revealed' | 'celebrating'
   >('dark');
   const [showConfetti, setShowConfetti] = useState(false);
   const confettiRef = useRef<any>(null);
@@ -189,7 +189,7 @@ export default function BabyRevealScreen({ navigation, route }: Props) {
     await delay(1000);
 
     // Step 10: Button appears
-    setPhase('celebratingl');
+    setPhase('celebrating');
     Animated.parallel([
       Animated.timing(buttonOpacity, {
         toValue: 1,

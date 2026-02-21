@@ -15,8 +15,8 @@ import { performAction as enginePerformAction } from '../lib/baby-engine';
 
 export const DEMO_BABY_DATA: Baby = {
   id: 'demo-baby',
-  name: 'Coco',
-  image_url: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=512&h=512&fit=crop',
+  name: 'Sage',
+  image_url: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=512&h=512&fit=crop&crop=face',
   happiness: 75,
   hunger: 80,
   cleanliness: 70,
