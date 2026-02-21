@@ -44,7 +44,7 @@ export default function NamingScreen({ navigation, route }: Props) {
               resizeMode="cover"
             />
             <View style={styles.imageBadge}>
-              <Text style={styles.imageBadgeText}>Your baby! 🎉</Text>
+              <Text style={styles.imageBadgeText}>They're waiting for a name 💕</Text>
             </View>
           </View>
 

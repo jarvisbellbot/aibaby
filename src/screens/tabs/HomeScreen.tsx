@@ -64,7 +64,7 @@ export default function HomeScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.greeting}>Good {getTimeOfDay()}! 👋</Text>
+          <Text style={styles.greeting}>{getTimeGreeting(currentBaby.name)}</Text>
           <Text style={styles.name}>
             {currentBaby.name} {currentStats.moodEmoji}
           </Text>
@@ -136,11 +136,11 @@ const statStyles = StyleSheet.create({
   label: { fontSize: 11, color: colors.textTertiary, fontWeight: '600' },
 });
 
-function getTimeOfDay(): string {
+function getTimeGreeting(name: string): string {
   const hour = new Date().getHours();
-  if (hour < 12) return 'morning';
-  if (hour < 17) return 'afternoon';
-  return 'evening';
+  if (hour < 12) return `Good morning! ☀️ ${name} woke up happy!`;
+  if (hour < 17) return `Afternoon! ${name} has been waiting for you 💕`;
+  return `Good evening! ${name} wants to say goodnight 🌙`;
 }
 
 function getMoodMessage(happiness: number, name: string): string {
