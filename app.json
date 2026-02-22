@@ -38,7 +38,7 @@
         {
           "photosPermission": "Allow Ember to access your photos to create your AI baby."
         }
-      ],
+      ]
     ],
     "extra": {
       "supabaseUrl": "",
