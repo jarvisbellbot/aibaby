@@ -9,11 +9,11 @@
 import React, { useEffect, useRef } from 'react';
 import {
   View,
-  Image,
   StyleSheet,
   Animated,
   Text,
 } from 'react-native';
+import { Image } from 'expo-image';
 import LottieView from 'lottie-react-native';
 import { colors } from '../../theme/colors';
 
@@ -237,7 +237,9 @@ export const BabyAvatar: React.FC<BabyAvatarProps> = ({
             <Image
               source={{ uri: imageUrl }}
               style={{ width: size, height: size, borderRadius: size / 2 }}
-              resizeMode="cover"
+              contentFit="cover"
+              transition={300}
+              placeholder={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI6QAAAABJRU5ErkJggg==' }}
             />
           ) : (
             // Placeholder: Lottie animation or bouncing emoji fallback

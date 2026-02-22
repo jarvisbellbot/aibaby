@@ -3,7 +3,7 @@
  * Main baby care screen — wired to BabyContext
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View, Text, StyleSheet, RefreshControl, ScrollView, SafeAreaView, Animated,
 } from 'react-native';
@@ -68,6 +68,16 @@ export default function HomeScreen() {
     });
   };
 
+  // ── Memoized computed values ─────────────────────────────────────────────
+  const greeting = useMemo(
+    () => getTimeGreeting(currentBaby?.name ?? ''),
+    [currentBaby?.name]
+  );
+  const moodMessage = useMemo(
+    () => getMoodMessage(currentStats?.happiness ?? 70, currentBaby?.name ?? ''),
+    [currentStats?.happiness, currentBaby?.name]
+  );
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refreshBaby();
@@ -114,7 +124,7 @@ export default function HomeScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.greeting}>{getTimeGreeting(currentBaby.name)}</Text>
+          <Text style={styles.greeting}>{greeting}</Text>
           <Text style={styles.name}>
             {currentBaby.name} {currentStats.moodEmoji}
           </Text>
@@ -167,7 +177,7 @@ export default function HomeScreen() {
 
         {/* Mood message */}
         <View style={styles.moodCard}>
-          <Text style={styles.moodText}>{getMoodMessage(currentStats.happiness, currentBaby.name)}</Text>
+          <Text style={styles.moodText}>{moodMessage}</Text>
         </View>
       </ScrollView>
 

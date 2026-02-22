@@ -5,8 +5,9 @@
 
 import React from 'react';
 import {
-  View, Text, StyleSheet, FlatList, SafeAreaView,
+  View, Text, StyleSheet, SafeAreaView,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { colors } from '../../theme/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -123,7 +124,7 @@ export default function LeaderboardScreen() {
         <Text style={styles.headerSub}>Feb 17 – Feb 23 · Demo data</Text>
       </LinearGradient>
 
-      <FlatList
+      <FlashList
         data={DEMO_LEADERBOARD}
         keyExtractor={item => String(item.rank)}
         renderItem={({ item }) => (

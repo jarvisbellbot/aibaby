@@ -8,6 +8,7 @@
     "userInterfaceStyle": "light",
     "scheme": "ember",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
